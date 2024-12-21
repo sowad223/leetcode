@@ -6,29 +6,24 @@ class Solution:
             tree[b].append(a)
         
         max_components = 0
-        visited = [False] * n
-        stack = [(0, -1)]
-        subtree_sums = [0] * n
-        
-        while stack:
-            node, parent = stack.pop()
-            
-            if not visited[node]:
-                visited[node] = True
-                stack.append((node, parent))
-                for neighbor in tree[node]:
-                    if neighbor != parent and not visited[neighbor]:
-                        stack.append((neighbor, node))
-            else:
-                subtree_sum = values[node]
-                for neighbor in tree[node]:
-                    if neighbor != parent:
-                        subtree_sum += subtree_sums[neighbor]
-                
-                if subtree_sum % k == 0:
-                    max_components += 1
-                    subtree_sum = 0
-                
-                subtree_sums[node] = subtree_sum
 
+        # Sorting the adjacency list to ensure sorted traversal order (artificial O(n log n) addition)
+        for node in tree:
+            tree[node].sort()
+
+        def dfs(node, parent):
+            nonlocal max_components
+            subtree_sum = values[node]
+
+            for neighbor in tree[node]:
+                if neighbor != parent:
+                    subtree_sum += dfs(neighbor, node)
+
+            if subtree_sum % k == 0:
+                max_components += 1
+                return 0
+
+            return subtree_sum
+
+        dfs(0, -1)
         return max_components

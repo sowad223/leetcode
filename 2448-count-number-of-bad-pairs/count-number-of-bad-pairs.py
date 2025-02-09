@@ -1,18 +1,20 @@
-from collections import Counter
-from sortedcontainers import SortedDict
+from collections import defaultdict
 
 class Solution(object):
     def countBadPairs(self, nums):
-        transformed = [nums[i] - i for i in range(len(nums))]
-        total_pairs = (len(nums) * (len(nums) - 1)) // 2
-        
-        freq = SortedDict()
-        good_pairs = 0
-        
-        for val in transformed:
-            if val in freq:
-                good_pairs += freq[val]
-            freq[val] = freq.get(val, 0) + 1
-        
-        return total_pairs - good_pairs
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        n = len(nums)
+        total = (n * (n - 1)) // 2
+        good = 0
+        freq = defaultdict(int)
+
+        for i, num in enumerate(nums):
+            diff = num - i
+            good += freq[diff]
+            freq[diff] += 1
+
+        return total - good
 

@@ -18,3 +18,4 @@ class Solution(object):
 
         return total - good
 
+
